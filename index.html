@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>레시피 노트 · Recipe Notebook</title>
+<meta name="description" content="짝꿍의 손글씨 레시피를 링 노트 카드로 옮긴 개인 레시피 노트. 네 자리 비밀번호로 잠겨 있어요.">
+<meta name="theme-color" content="#191410">
+<meta name="color-scheme" content="dark">
+<meta property="og:title" content="레시피 노트 · Recipe Notebook">
+<meta property="og:description" content="짝꿍의 손글씨 레시피를 링 노트 카드로 옮긴 개인 레시피 노트.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='10' y='12' width='46' height='38' rx='4' fill='%23f8f2e0'/%3E%3Cpath d='M15 26h34M15 34h30M15 42h22' stroke='%23c3bdae' stroke-width='2'/%3E%3Ccircle cx='14' cy='18' r='8' fill='none' stroke='%23b9c0c8' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<svg width="0" height="0" class="defs" aria-hidden="true">
+  <defs>
+    <linearGradient id="metal" x1="10%" y1="0%" x2="90%" y2="100%">
+      <stop offset="0%" stop-color="#6b7480"/>
+      <stop offset="18%" stop-color="#d7dde4"/>
+      <stop offset="34%" stop-color="#8d96a2"/>
+      <stop offset="52%" stop-color="#eef2f7"/>
+      <stop offset="68%" stop-color="#98a1ad"/>
+      <stop offset="84%" stop-color="#c9d0d8"/>
+      <stop offset="100%" stop-color="#5f6773"/>
+    </linearGradient>
+    <linearGradient id="metalDark" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3d444d"/>
+      <stop offset="50%" stop-color="#7b8490"/>
+      <stop offset="100%" stop-color="#333a42"/>
+    </linearGradient>
+    <g id="ringShape">
+      <circle cx="80" cy="80" r="64" fill="none" stroke="url(#metalDark)" stroke-width="20"/>
+      <circle cx="80" cy="80" r="64" fill="none" stroke="url(#metal)" stroke-width="15"/>
+      <circle cx="80" cy="80" r="64" fill="none" stroke="#ffffff" stroke-width="2.4" opacity=".55" stroke-dasharray="120 60" transform="rotate(28 80 80)"/>
+      <circle cx="80" cy="80" r="72" fill="none" stroke="#ffffff" stroke-width="1.2" opacity=".18"/>
+    </g>
+  </defs>
+</svg>
+
+<!-- ══════════ 잠금 화면 ══════════ -->
+<section class="lock" id="lock" hidden>
+  <div class="lock-inner">
+    <div class="lock-book">
+      <div class="lock-stack" aria-hidden="true"><i></i><i></i><i></i></div>
+      <svg class="ring ring--lock" viewBox="0 0 160 160" aria-hidden="true"><use href="#ringShape"/></svg>
+      <span class="hole hole--lock" aria-hidden="true"></span>
+      <div class="lock-paper">
+        <p class="eyebrow">RECIPE NOTEBOOK</p>
+        <h1 class="lock-title">레시피 노트</h1>
+        <p class="lock-sub">네 자리 숫자를 눌러 주세요</p>
+        <div class="pins" id="pins" aria-hidden="true">
+          <span class="pin"></span><span class="pin"></span><span class="pin"></span><span class="pin"></span>
+        </div>
+        <p class="lock-msg" id="lockMsg" role="status" aria-live="polite"></p>
+        <div class="keypad" id="keypad" role="group" aria-label="비밀번호 숫자 키패드">
+          <button class="key" data-key="1">1</button>
+          <button class="key" data-key="2">2</button>
+          <button class="key" data-key="3">3</button>
+          <button class="key" data-key="4">4</button>
+          <button class="key" data-key="5">5</button>
+          <button class="key" data-key="6">6</button>
+          <button class="key" data-key="7">7</button>
+          <button class="key" data-key="8">8</button>
+          <button class="key" data-key="9">9</button>
+          <button class="key key--ghost" data-key="clear" aria-label="지우기">지움</button>
+          <button class="key" data-key="0">0</button>
+          <button class="key key--ghost" data-key="del" aria-label="한 자리 지우기">⌫</button>
+        </div>
+      </div>
+    </div>
+    <p class="lock-foot">비밀번호를 아는 사람만 열 수 있는 노트예요 · 키보드 숫자도 돼요</p>
+  </div>
+</section>
+
+<!-- ══════════ 노트 본체 ══════════ -->
+<section class="app" id="app" hidden>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-ring" viewBox="0 0 160 160" aria-hidden="true"><use href="#ringShape"/></svg>
+      <div class="brand-txt">
+        <h1>레시피 노트</h1>
+        <p>RECIPE NOTEBOOK</p>
+      </div>
+    </div>
+    <div class="tools">
+      <button class="tool" id="btnToc" aria-label="목차 열기">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span>목차</span>
+      </button>
+      <button class="tool tool--accent" id="btnNew" aria-label="새 카드 만들기">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+        <span>새 카드</span>
+      </button>
+      <button class="tool" id="btnLock" aria-label="노트 잠그기">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.5 11V8.5a3.5 3.5 0 0 1 7 0V11" fill="none" stroke="currentColor" stroke-width="1.7"/></svg>
+        <span>잠그기</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="searchbar">
+    <svg class="mag" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.8 15.8 20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <input id="search" type="search" placeholder="제목 · 재료 · 메모 검색  (예: 아몬드, 초코)" autocomplete="off" spellcheck="false" aria-label="레시피 검색">
+    <button class="search-clear" id="searchClear" aria-label="검색어 지우기" hidden>×</button>
+  </div>
+
+  <nav class="tabs" id="tabs" aria-label="카테고리 인덱스"></nav>
+
+  <main class="stage">
+    <aside class="toc" id="toc" aria-label="목차"></aside>
+
+    <div class="bookwrap">
+      <button class="flip flip--prev" id="prev" aria-label="이전 카드">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="book" id="book">
+        <div class="stack" aria-hidden="true">
+          <i class="sheet"></i><i class="sheet"></i><i class="sheet"></i><i class="sheet"></i>
+          <span class="hole hole--stack"></span>
+        </div>
+        <article class="card" id="card" aria-live="polite"></article>
+        <span class="hole hole--front" aria-hidden="true"></span>
+        <svg class="ring ring--main" viewBox="0 0 160 160" aria-hidden="true"><use href="#ringShape"/></svg>
+      </div>
+
+      <button class="flip flip--next" id="next" aria-label="다음 카드">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </main>
+
+  <footer class="foot">
+    <span class="foot-dots" aria-hidden="true">· · ·</span>
+    <p>짝꿍의 손글씨 레시피 · 둘만 보는 노트</p>
+  </footer>
+
+  <div class="mobilebar" id="mobilebar">
+    <button class="mb-btn" id="mbPrev" aria-label="이전 카드">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.5 6 8.5 12l6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button class="mb-count" id="mbCount" aria-label="목차 열기">1 / 1</button>
+    <button class="mb-btn" id="mbNext" aria-label="다음 카드">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</section>
+
+<!-- ══════════ 원본 사진 ══════════ -->
+<div class="modal" id="photoModal" hidden>
+  <div class="modal-paper modal-paper--photo">
+    <button class="modal-x" data-close="photoModal" aria-label="닫기">×</button>
+    <p class="photo-cap" id="photoCap"></p>
+    <div class="photo-frame"><img id="photoImg" alt="손글씨 원본 사진" loading="lazy"></div>
+  </div>
+</div>
+
+<!-- ══════════ 카드 편집 ══════════ -->
+<div class="modal" id="editModal" hidden>
+  <form class="modal-paper modal-paper--edit" id="editForm" novalidate>
+    <button type="button" class="modal-x" data-close="editModal" aria-label="닫기">×</button>
+    <h2 class="edit-title" id="editTitle">새 카드</h2>
+    <p class="edit-sub" id="editSub">이 브라우저에만 저장돼요. 필요하면 JSON으로 내보내세요.</p>
+
+    <div class="field">
+      <label for="fTitle">제목</label>
+      <input id="fTitle" name="title" maxlength="40" placeholder="예: 바스크 치즈케이크" required>
+    </div>
+    <div class="field">
+      <label for="fSub">부제</label>
+      <input id="fSub" name="subtitle" maxlength="60" placeholder="예: 진한 크림치즈 → 촉촉한 윗면">
+    </div>
+    <div class="field">
+      <label for="fCat">분류</label>
+      <select id="fCat" name="category"></select>
+    </div>
+
+    <div class="field">
+      <label>재료 · 공정 <span class="hint">아래 칸에 한 줄씩</span></label>
+      <div class="steps-edit" id="stepsEdit"></div>
+      <button type="button" class="add-step" id="addStep">+ 한 줄 추가</button>
+    </div>
+
+    <div class="field">
+      <label for="fMemo">메모</label>
+      <textarea id="fMemo" name="memo" rows="2" maxlength="300" placeholder="참고할 점, 고친 분량 등"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="fPhoto">손글씨 사진 <span class="hint">선택</span></label>
+      <div class="photo-pick">
+        <input type="file" id="fPhoto" accept="image/*">
+        <button type="button" class="ghost-btn" id="photoClear" hidden>사진 빼기</button>
+      </div>
+      <div class="photo-preview" id="photoPreview" hidden><img alt="첨부한 사진 미리보기"></div>
+    </div>
+
+    <div class="edit-error" id="editError" role="alert"></div>
+
+    <div class="edit-actions">
+      <button type="button" class="ghost-btn" id="deleteCard" hidden>카드 지우기</button>
+      <span class="grow"></span>
+      <button type="button" class="ghost-btn" data-close="editModal">취소</button>
+      <button type="submit" class="primary-btn">저장</button>
+    </div>
+  </form>
+</div>
+
+<!-- ══════════ 목차 시트 (모바일) ══════════ -->
+<div class="sheet" id="tocSheet" hidden>
+  <div class="sheet-paper">
+    <div class="sheet-head">
+      <h2>목차</h2>
+      <button class="modal-x" data-close="tocSheet" aria-label="닫기">×</button>
+    </div>
+    <div class="sheet-tools">
+      <button class="ghost-btn" id="btnExport">JSON 내보내기</button>
+      <button class="ghost-btn" id="btnLock2">잠그기</button>
+    </div>
+    <div class="sheet-list" id="tocSheetList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
